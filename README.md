@@ -40,14 +40,13 @@ Keuntungan utamanya yaitu logika perhitungan disimpan di database, jadi lebih ra
 
 # 🔄 Backup Otomatis
 Untuk menjaga ketersediaan dan keamanan data, sistem ClickCam dilengkapi dengan fitur backup otomatis database menggunakan perintah mysqldump. Backup dilakukan secara berkala, dan hasil file disimpan dengan nama yang menyertakan timestamp, sehingga mudah dilacak. Setiap file backup akan disimpan dalam folder storage/backups.
-📄 backup.php
-<?php
-require_once __DIR__ . '/init.php'; // opsional, jika ada konfigurasi
-
-$date = date('Y-m-d_H-i-s');
-$backupFile = __DIR__ . "/storage/backups/clickcam_backup_{$date}.sql";
-$command = "\"C:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\bin\\mysqldump.exe\" -u root clickcam > \"$backupFile\"";
-
-exec($command);
+![backup](https://github.com/user-attachments/assets/f20cc6e2-a17a-4db0-af19-7d3f64b53fc4)
 
 # 🧩 Relevansi Proyek dengan Pemrosesan Data Terdistribusi
+Sistem ClickCam dibangun dengan memperhatikan prinsip-prinsip inti dari pemrosesan data terdistribusi, meskipun bersifat lokal atau skala kecil. Pendekatan ini memastikan bahwa sistem tetap konsisten, reliable, dan terjaga integritasnya saat digunakan secara bersamaan oleh banyak pengguna:
+- Konsistensi
+Semua proses penyewaan dan pembaruan data dilakukan melalui stored procedure dan validasi langsung di database, sehingga mencegah konflik data saat beberapa pengguna mengakses sistem secara bersamaan.
+- Reliabilitas
+Fitur seperti trigger dan transaction digunakan untuk menjaga keandalan sistem. Jika terjadi kegagalan dalam proses penyewaan (misalnya stok kamera habis atau input tidak valid), maka seluruh proses otomatis dibatalkan untuk mencegah kerusakan data.
+- Integritas
+Dengan memusatkan logika seperti perhitungan total sewa (fn_hitung_total) dan log status penyewaan (log_penyewaan) di dalam database, sistem tetap valid dan aman meskipun dipanggil dari berbagai sumber (misalnya antarmuka admin, penyewa, atau API di masa depan).
